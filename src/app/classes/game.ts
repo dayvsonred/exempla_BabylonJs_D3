@@ -3,6 +3,9 @@ Vector3, HemisphericLight, MeshBuilder, PointLight, ArcRotateCamera, StandardMat
 ActionManager , ExecuteCodeAction
 } from 'babylonjs';
 
+
+import * as BABYLON from 'babylonjs';
+
 // import {  Button3D, AdvancedDynamicTexture, Button  } from 'babylonjs-gui';
 // import * as GUI from 'babylonjs-gui';
 // import { AdvancedDynamicTexture } from '@babylonjs/gui/2D';
@@ -40,8 +43,25 @@ export class Game {
 
    // create a basic light, aiming 0,1,0 - meaning, to the sky
     this._light = new HemisphericLight('light1', new Vector3(0.5,1,-1), this._scene);
+    // this._light.diffuse = new Color3(1, 0, 0);
+    this._light.intensity = 1;
+    this._light.specular = new Color3(0, 1, 0); 
+    // this._light.specular = BABYLON.Color3.Black();
+
+    // this._light = new  PointLight("Omni", new BABYLON.Vector3(0, 100, 100), this._scene);
+    
+
+
+    /**Movimentar luz */
+    // Move light in the scene
+    // var curTime = 0;
+    // this._scene.onBeforeRenderObservable.add(()=>{
+    //     curTime+=this._engine.getDeltaTime();
+    //     this._light.  = Math.sin(curTime/1000)*5
+    // })
+
    // create a basic light, aiming 0,1,0 - meaning, to the sky
-   // this._light = new PointLight('light', new Vector3(0,1,0), this._scene);
+   //this._light = new PointLight('light', new Vector3(-4,1,-1), this._scene);
 
     // var light = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 	// light.diffuse = new BABYLON.Color3(1, 0, 0);
@@ -121,11 +141,78 @@ export class Game {
     // Add and manipulate meshes in the scene
     //  var box = BABYLON.MeshBuilder.CreateBox("box", {height: 1, width: 0.75, depth: 0.25}, scene);
     
-    let caixa = MeshBuilder.CreateBox('box',
-    {size: 2, width: 2, height: 5 , depth: 3}, this._scene);
-    caixa.position.x = 10;
-    caixa.position.y = 2;
-    caixa.material = vermelho;
+
+    /** PONTE */
+    let coluna1 = MeshBuilder.CreateBox('box1',
+    {size: 3, width: 1, height: 10 , depth: 1}, this._scene);
+    coluna1.position.x = 10;
+    coluna1.position.y = 5;
+    coluna1.material = amarelo;
+
+    let coluna2 = MeshBuilder.CreateBox('box2',
+    {size: 3, width: 1, height: 10 , depth: 1}, this._scene);
+    coluna2.position.x = -15;
+    coluna2.position.y = 5;
+    coluna2.material = amarelo;
+
+    let coluna3 = MeshBuilder.CreateBox('box3',
+    {size: 3, width: 1, height: 10 , depth: 1}, this._scene);
+    coluna3.position.x = -15;
+    coluna3.position.y = 5;
+    coluna3.position.z = 10;
+    coluna3.material = amarelo;
+
+    let coluna4 = MeshBuilder.CreateBox('box4',
+    {size: 3, width: 1, height: 10 , depth: 1}, this._scene);
+    coluna4.position.x = 10;
+    coluna4.position.y = 5;
+    coluna4.position.z = 10;
+    coluna4.material = amarelo;
+
+
+    //COLUNA TOP
+    let coluna5 = MeshBuilder.CreateBox('box5',
+    {size: 3, width: 1, height: 15 , depth: 1}, this._scene);
+    coluna5.position.x = 10;
+    coluna5.position.y = 10;
+    coluna5.position.z = 5;
+    coluna5.rotation.x = (Math.PI * 90) /180;
+    coluna5.material = amarelo;
+
+    let coluna6 = MeshBuilder.CreateBox('box6',
+    {size: 3, width: 1, height: 15 , depth: 1}, this._scene);
+    coluna6.position.x = -15;
+    coluna6.position.y = 10;
+    coluna6.position.z = 5;
+    coluna6.rotation.x = (Math.PI * 90) /180;
+    coluna6.material = amarelo;
+    
+
+    let coluna7 = MeshBuilder.CreateBox('box7',
+    {size: 3, width: 1, height: 29 , depth: 1}, this._scene);
+    coluna7.position.x = -2;
+    coluna7.position.y = 10;
+    coluna7.position.z = 0;
+    coluna7.rotation.x = (Math.PI * 90) /180;
+    coluna7.rotation.y = (Math.PI * 90) /180;
+    coluna7.material = amarelo;
+
+
+    let coluna8 = MeshBuilder.CreateBox('box8',
+    {size: 3, width: 1, height: 29 , depth: 1}, this._scene);
+    coluna8.position.x = -2;
+    coluna8.position.y = 10;
+    coluna8.position.z = 10;
+    coluna8.rotation.x = (Math.PI * 90) /180;
+    coluna8.rotation.y = (Math.PI * 90) /180;
+    coluna8.material = amarelo;
+
+
+
+
+
+
+
     
     //Cilindros
     let CyposX, CyposY, CyposZ;
@@ -326,8 +413,62 @@ export class Game {
 	cylindro33.actionManager.registerAction(new ExecuteCodeAction( ActionManager.OnPickUpTrigger, function () {
 		alert('call click event =) normal');
     }));
+
+
+
     
 
+
+     // Creation of a basic animation with box 1
+    //----------------------------------------
+
+    // Torus
+    var torus = BABYLON.Mesh.CreateTorus("torus", 8, 2, 32, this._scene, false);
+    torus.position.x = 25;
+    torus.position.z = 30;
+ 
+    //Create a Vector3 animation at 30 FPS
+    var animationTorus = new BABYLON.Animation("torusEasingAnimation", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    // the torus destination position
+    var nextPos = torus.position.add(new BABYLON.Vector3(-80, 0, 0));
+
+    // Animation keys
+    var keysTorus = [];
+    keysTorus.push({ frame: 0, value: torus.position });
+    keysTorus.push({ frame: 60, value: nextPos });
+    keysTorus.push({ frame: 120, value: torus.position  });
+    animationTorus.setKeys(keysTorus);
+
+    // Adding an easing function
+    // You can use :
+    //1.	CircleEase()
+    //2.	BackEase(amplitude)
+    //3.	BounceEase(bounces, bounciness)
+    //4.	CubicEase()
+    //5.	ElasticEase(oscillations, springiness)
+    //6.	ExponentialEase(exponent)
+    //7.	PowerEase(power)
+    //8.	QuadraticEase()
+    //9.	QuarticEase()
+    //10.	QuinticEase()
+    //11.	SineEase()
+    // And if you want a total control, you can use a Bezier Curve animation
+    //12.   BezierCurveEase(x1, y1, x2, y2)
+    var easingFunction = new BABYLON.CircleEase();
+
+    // For each easing function, you can choose beetween EASEIN (default), EASEOUT, EASEINOUT
+    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+
+    // Adding easing function to my animation
+    animationTorus.setEasingFunction(easingFunction);
+
+    // Adding animation to my torus animations collection
+    torus.animations.push(animationTorus);
+
+    //Finally, launch animations on torus, from key 0 to key 120 with loop activated
+    this._scene.beginAnimation(torus, 0, 120, true);
+    
    
 
     
