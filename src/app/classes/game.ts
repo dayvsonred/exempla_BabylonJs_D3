@@ -416,8 +416,6 @@ export class Game {
 
 
 
-    
-
 
      // Creation of a basic animation with box 1
     //----------------------------------------
